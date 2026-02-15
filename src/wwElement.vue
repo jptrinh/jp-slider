@@ -374,6 +374,19 @@ export default {
         };
         /* wwEditor:end */
 
+        // Component actions (callable from workflows, work in both edit and published mode)
+        const nextSlide = () => {
+            if (swiperInstance.value) swiperInstance.value.slideNext(transitionDuration.value);
+        };
+
+        const prevSlide = () => {
+            if (swiperInstance.value) swiperInstance.value.slidePrev(transitionDuration.value);
+        };
+
+        const goToSlide = index => {
+            if (swiperInstance.value) swiperInstance.value.slideToLoop(index, transitionDuration.value);
+        };
+
         /* wwEditor:start */
         watch(
             () => isEditing.value,
@@ -436,6 +449,27 @@ export default {
         onBeforeUnmount(() => {
             if (swiperInstance.value) swiperInstance.value.destroy(true, true);
         });
+
+        // Expose active slide index as component variable
+        const { value: activeSlideIndex, setValue: setActiveSlideIndex } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'activeSlideIndex',
+            defaultValue: 0,
+            type: 'number',
+            readonly: true,
+        });
+
+        watch(
+            () => sliderIndex.value,
+            newIndex => {
+                setActiveSlideIndex(newIndex);
+                emit('trigger-event', {
+                    name: 'slide-change',
+                    event: { index: newIndex },
+                });
+            },
+            { immediate: true }
+        );
 
         // Create component variables for external binding (accessible in WeWeb editor)
         const slideImageStatesVariable = wwLib.wwVariable.useComponentVariable({
@@ -524,6 +558,9 @@ export default {
             slideNext,
             slidePrev,
             swiperInstance,
+            nextSlide,
+            prevSlide,
+            goToSlide,
             /* wwEditor:start */
             addSlide,
             removeSlide,

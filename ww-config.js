@@ -76,6 +76,25 @@ export default {
                 },
             ],
         },
+        {
+            action: 'nextSlide',
+            label: { en: 'Next slide' },
+        },
+        {
+            action: 'prevSlide',
+            label: { en: 'Previous slide' },
+        },
+        {
+            action: 'goToSlide',
+            label: { en: 'Go to slide' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
     ],
     properties: {
         mainLayoutContent: {
@@ -348,4 +367,11 @@ export default {
             defaultValue: [],
         },
     },
+    triggerEvents: [
+        {
+            name: 'slide-change',
+            label: { en: 'On slide change' },
+            event: { index: 0 },
+        },
+    ],
 };
