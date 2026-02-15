@@ -450,6 +450,23 @@ export default {
             if (swiperInstance.value) swiperInstance.value.destroy(true, true);
         });
 
+        // Expose binded slides as component variable
+        const { value: slides, setValue: setSlides } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'slides',
+            defaultValue: [],
+            type: 'array',
+            readonly: true,
+        });
+
+        watch(
+            () => getContent(props.content?.mainLayoutContent),
+            newSlides => {
+                setSlides(newSlides);
+            },
+            { immediate: true, deep: true }
+        );
+
         // Expose active slide index as component variable
         const { value: activeSlideIndex, setValue: setActiveSlideIndex } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
