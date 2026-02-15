@@ -87,7 +87,6 @@ export default {
         const componentKey = ref(0);
         const isInit = ref(false);
 
-
         const isEditing = computed(() => {
             /* wwEditor:start */
             return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
@@ -109,7 +108,13 @@ export default {
             return content.length;
         });
 
-        const { slideImageStates, slideImageStatesWithAggregates, allImagesLoaded, initImageTracking, scanExistingSlides } = useImageTracking(swiper, nbOfSlides);
+        const {
+            slideImageStates,
+            slideImageStatesWithAggregates,
+            allImagesLoaded,
+            initImageTracking,
+            scanExistingSlides,
+        } = useImageTracking(swiper, nbOfSlides);
 
         const slidesPerView = computed(() => {
             let slidePerView = props.content.slidesPerView;
@@ -174,6 +179,7 @@ export default {
             const options = {
                 modules: [EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay, Mousewheel],
                 effect: props.content.effect,
+                direction: props.content?.direction || 'horizontal',
                 cardsEffect: { slideShadows: false },
                 coverflowEffect: { slideShadows: false },
                 slidesPerView: slidesPerView.value,
@@ -305,7 +311,7 @@ export default {
         const removeSlide = index => {
             const mainLayoutContent = [...props.content.mainLayoutContent];
             const slideLabels = [...(props.content.slideLabels || [])];
-            
+
             mainLayoutContent.splice(index, 1);
             if (slideLabels.length > index) {
                 slideLabels.splice(index, 1);
@@ -316,48 +322,54 @@ export default {
 
         const moveSlideUp = index => {
             if (index <= 0) return;
-            
+
             const mainLayoutContent = [...props.content.mainLayoutContent];
             const slideLabels = [...(props.content.slideLabels || [])];
-            
+
             // Ensure slideLabels array has default labels for all slides
             while (slideLabels.length < mainLayoutContent.length) {
                 slideLabels.push(`Slide ${slideLabels.length + 1}`);
             }
-            
-            [mainLayoutContent[index], mainLayoutContent[index - 1]] = [mainLayoutContent[index - 1], mainLayoutContent[index]];
+
+            [mainLayoutContent[index], mainLayoutContent[index - 1]] = [
+                mainLayoutContent[index - 1],
+                mainLayoutContent[index],
+            ];
             [slideLabels[index], slideLabels[index - 1]] = [slideLabels[index - 1], slideLabels[index]];
-            
+
             emit('update:content', { mainLayoutContent, slideLabels });
         };
 
         const moveSlideDown = index => {
             if (index >= props.content.mainLayoutContent.length - 1) return;
-            
+
             const mainLayoutContent = [...props.content.mainLayoutContent];
             const slideLabels = [...(props.content.slideLabels || [])];
-            
+
             // Ensure slideLabels array has default labels for all slides
             while (slideLabels.length < mainLayoutContent.length) {
                 slideLabels.push(`Slide ${slideLabels.length + 1}`);
             }
-            
-            [mainLayoutContent[index], mainLayoutContent[index + 1]] = [mainLayoutContent[index + 1], mainLayoutContent[index]];
+
+            [mainLayoutContent[index], mainLayoutContent[index + 1]] = [
+                mainLayoutContent[index + 1],
+                mainLayoutContent[index],
+            ];
             [slideLabels[index], slideLabels[index + 1]] = [slideLabels[index + 1], slideLabels[index]];
-            
+
             emit('update:content', { mainLayoutContent, slideLabels });
         };
 
         const updateSlideLabel = ({ index, label }) => {
             const slideLabels = [...(props.content.slideLabels || [])];
-            
+
             // Ensure the array is long enough
             while (slideLabels.length <= index) {
                 slideLabels.push(null);
             }
-            
+
             slideLabels[index] = label;
-            
+
             emit('update:content', { slideLabels });
         };
         /* wwEditor:end */
@@ -431,23 +443,23 @@ export default {
             name: 'slideImageStates',
             defaultValue: slideImageStatesWithAggregates,
             type: 'any',
-            readonly: true
+            readonly: true,
         });
 
         const allImagesLoadedVariable = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
-            name: 'allImagesLoaded', 
+            name: 'allImagesLoaded',
             defaultValue: allImagesLoaded,
             type: 'boolean',
-            readonly: true
+            readonly: true,
         });
 
         // Watch and update component variables when states change
-        watch(slideImageStatesWithAggregates, (newValue) => {
+        watch(slideImageStatesWithAggregates, newValue => {
             slideImageStatesVariable.setValue(newValue);
         });
 
-        watch(allImagesLoaded, (newValue) => {
+        watch(allImagesLoaded, newValue => {
             allImagesLoadedVariable.setValue(newValue);
         });
 

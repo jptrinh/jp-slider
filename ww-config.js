@@ -11,7 +11,7 @@ export default {
         },
         customSettingsPropertiesOrder: [
             ['mainLayoutContent', 'slideIndex'],
-            ['slidesPerView', 'spaceBetween', 'effect', 'transitionDuration'],
+            ['slidesPerView', 'spaceBetween', 'effect', 'transitionDuration', 'direction'],
             'navigation',
             'pagination',
             'loop',
@@ -206,6 +206,28 @@ export default {
             states: true,
             bindable: true,
             classes: true,
+        },
+        direction: {
+            label: { en: 'Direction' },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'horizontal', label: { en: 'Horizontal' } },
+                    { value: 'vertical', label: { en: 'Vertical' } },
+                ],
+            },
+            defaultValue: 'horizontal',
+            responsive: true,
+            states: true,
+            bindable: true,
+            classes: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'Valid values: horizontal | vertical',
+            },
+            /* wwEditor:end */
         },
         navigation: {
             type: 'OnOff',
