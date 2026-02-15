@@ -11,7 +11,7 @@ export default {
         },
         customSettingsPropertiesOrder: [
             ['mainLayoutContent', 'slideIndex'],
-            ['slidesPerView', 'spaceBetween', 'effect', 'transitionDuration'],
+            ['slidesPerView', 'spaceBetween', 'effect', 'transitionDuration', 'direction'],
             'navigation',
             'pagination',
             'loop',
@@ -73,6 +73,25 @@ export default {
                             label: { type: 'string', label: { en: 'New label' } },
                         },
                     },
+                },
+            ],
+        },
+        {
+            action: 'nextSlide',
+            label: { en: 'Next slide' },
+        },
+        {
+            action: 'prevSlide',
+            label: { en: 'Previous slide' },
+        },
+        {
+            action: 'goToSlide',
+            label: { en: 'Go to slide' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
                 },
             ],
         },
@@ -207,6 +226,28 @@ export default {
             bindable: true,
             classes: true,
         },
+        direction: {
+            label: { en: 'Direction' },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'horizontal', label: { en: 'Horizontal' } },
+                    { value: 'vertical', label: { en: 'Vertical' } },
+                ],
+            },
+            defaultValue: 'horizontal',
+            responsive: true,
+            states: true,
+            bindable: true,
+            classes: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'Valid values: horizontal | vertical',
+            },
+            /* wwEditor:end */
+        },
         navigation: {
             type: 'OnOff',
             label: {
@@ -326,4 +367,11 @@ export default {
             defaultValue: [],
         },
     },
+    triggerEvents: [
+        {
+            name: 'slide-change',
+            label: { en: 'On slide change' },
+            event: { index: 0 },
+        },
+    ],
 };
